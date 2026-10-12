@@ -1,6 +1,8 @@
 # Mapping Healthcare Access & Desert Corridors in Kirkuk
 
 A spatial epidemiology study and interactive dashboard looking at acute care distribution across Kirkuk, Iraq. 
+## [Live Link](https://kirkuk-healthcare-access-ikqq87vwup9smdaquksdyw.streamlit.app)
+
 ![Kirkuk Healthcare Accessibility & Siting Model](accessibility_model_results.png)
 Instead of drawing basic radius circles around hospitals, this project uses the Enhanced Two-Step Floating Catchment Area (E2SFCA) method to account for provider capacity, travel friction, and cross-neighborhood demand.
 
@@ -42,7 +44,6 @@ This project pairs real demographic satellite data with spatial accessibility mo
 ---
 
 ## Running Locally
-
 ```bash
 git clone [https://github.com/yunu5/kirkuk-healthcare-access.git](https://github.com/yunu5/kirkuk-healthcare-access.git)
 cd kirkuk-healthcare-access
