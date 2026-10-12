@@ -1,36 +1,56 @@
-# kirkuk-healthcare-access
-Spatial accessibility modeling (E2SFCA) and data-driven clinic siting in Kirkuk using UN/WorldPop gridded demographics and MOH hospital capacities.
+# Mapping Healthcare Access & Desert Corridors in Kirkuk
 
-# Kirkuk Healthcare Accessibility & Spatial Optimization
+A spatial epidemiology study and interactive dashboard looking at acute care distribution across Kirkuk, Iraq. 
 
-An empirical spatial data science pipeline and interactive dashboard evaluating acute healthcare accessibility across metropolitan Kirkuk, Iraq, using the Enhanced Two-Step Floating Catchment Area (E2SFCA) model and weighted $k$-means facility siting.
+Instead of drawing basic radius circles around hospitals, this project uses the Enhanced Two-Step Floating Catchment Area (E2SFCA) method to account for provider capacity, travel friction, and cross-neighborhood demand.
 
-## Methodology
+---
 
-- **Accessibility Model:** Enhanced Two-Step Floating Catchment Area (E2SFCA) with continuous Gaussian distance decay ($d_0 = 6\text{ km}$).
-- **Spatial Optimization:** Weighted $k$-means clustering targeting high-density populations within designated healthcare deserts ($A_i < 1.0\text{ beds / 1,000 capita}$).
-- **Projection System:** Projected into **UTM Zone 38N (EPSG:32638)** for ground-metric Euclidean distance computation.
+## Why This Matters
 
-## Data Sources
+Kirkuk's major acute care facilities (Azadi Teaching, Kirkuk General, Pediatric, and Al-Nasr) are historically concentrated along the central city spine. Rapid residential expansion over the past decade has pushed large population pockets to the outer perimeters, creating informal "healthcare deserts."
 
-1. **Demographics:** Gridded human population counts derived from UN OCHA / WorldPop 2020 constrained building footprint rasters (`irq_ppp_2020_UNadj.tif`) aggregated to 100m grid units.
-2. **Healthcare Supply:** Acute care hospital locations and licensed operational bed capacities referenced from Iraqi Ministry of Health baseline specifications.
+This project pairs real demographic satellite data with spatial accessibility modeling to:
+1. Identify which residential districts fall below the minimum threshold for acute bed access.
+2. Run facility siting optimization to find where new primary clinics would relieve the most pressure on the healthcare system.
 
-## Project Structure
+---
 
-- `app.py`: Interactive Streamlit analytical dashboard featuring real-time sensitivity sliders and Folium spatial heatmaps.
-- `spatial_analysis.py`: Standalone scientific modeling script implementing the E2SFCA mathematical matrix operations and $k$-means optimization.
-- `process_raster.py`: Data ingestion script extracting population centroids from the official GeoTIFF raster.
-- `kirkuk_real_population.csv`: Pre-extracted metropolitan population grid points used for lightweight deployment.
+## How It Works
 
-## Local Setup
+* **E2SFCA with Continuous Gaussian Decay:** Unlike standard 2SFCA models that drop off abruptly at a hard boundary, this applies a continuous Gaussian decay function. Access scores degrade realistically as travel distance increases up to a default 6 km threshold.
+* **Metric Accuracy:** All coordinates are projected into **UTM Zone 38N (EPSG:32638)** so distance calculations reflect ground meters rather than distorted degree approximations.
+* **Weighted Siting Optimization:** Uses weighted $k$-means clustering on underserved population points ($< 1.0$ bed per 1,000 residents) to calculate the mathematical centers of gravity for proposed new clinic sites.
+
+---
+
+## Data & Limitations
+
+* **Population:** Extracted from the UN OCHA / WorldPop 2020 building-constrained 100m raster (`irq_ppp_2020_UNadj.tif`). This reflects residential night-time density rather than daytime commercial foot traffic.
+* **Facility Capacity:** Based on operational bed capacities from Ministry of Health specifications (Kirkuk General: 400, Azadi: 400, Pediatric: 120, Al-Nasr: 180).
+* **Distance Metric:** Pairwise distance is currently measured using Euclidean distance. While effective for macro-level regional disparities, it does not factor in real-time road congestion or bridge bottlenecks across the Khasa riverbed.
+
+---
+
+## Repository Layout
+
+* `app.py`: Streamlit dashboard with sensitivity sliders and interactive map layers.
+* `spatial_analysis.py`: Standalone Python script running the mathematical matrix operations and generating analytical plots.
+* `process_raster.py`: Raster clipping script used to extract the Kirkuk metropolitan window from the national GeoTIFF.
+* `kirkuk_real_population.csv`: Processed demographic coordinate nodes used by the application.
+
+---
+
+## Running Locally
 
 ```bash
-git clone [https://github.com/YOUR_USERNAME/kirkuk-healthcare-access.git](https://github.com/YOUR_USERNAME/kirkuk-healthcare-access.git)
+git clone [https://github.com/yunu5/kirkuk-healthcare-access.git](https://github.com/yunu5/kirkuk-healthcare-access.git)
 cd kirkuk-healthcare-access
 
+# Create virtual environment
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
+# Install dependencies and launch
 pip install -r requirements.txt
 streamlit run app.py
