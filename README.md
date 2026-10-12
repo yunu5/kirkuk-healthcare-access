@@ -1,7 +1,7 @@
 # Mapping Healthcare Access & Desert Corridors in Kirkuk
 
 A spatial epidemiology study and interactive dashboard looking at acute care distribution across Kirkuk, Iraq. 
-
+![Kirkuk Healthcare Accessibility & Siting Model](accessibility_model_results.png)
 Instead of drawing basic radius circles around hospitals, this project uses the Enhanced Two-Step Floating Catchment Area (E2SFCA) method to account for provider capacity, travel friction, and cross-neighborhood demand.
 
 ---
